@@ -18,11 +18,6 @@ public class LocationEntity
     [Required]
     public string LocationName { get; set; }
 
-    [Required]
-    public string PublicAreaName { get; set; }
-
-    [Required]
-    public uint HouseNumber { get; set; }
 
     public virtual IReadOnlyCollection<CompetitionEntity> Competitions { get; set; }
 }
