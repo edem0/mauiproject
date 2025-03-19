@@ -6,8 +6,10 @@
              x:Class="Solution.DesktopApp.MainView">
 
     <Grid VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="Motorcycle Data Base" Style="{StaticResource PageTitle}" />
-        <Image Source="motorcycle.png" Aspect="AspectFit" Margin="100"/>
+        <Label Text="Lecsófőző Verseny Adatbázis" 
+               TextColor="Black" FontSize="Title" FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               Margin="0,20,0,20" />
     </Grid>
 
 </ContentPage>
