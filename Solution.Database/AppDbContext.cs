@@ -1,8 +1,20 @@
-﻿namespace Solution.DataBase;
+﻿using Solution.Database.Entities;
+
+namespace Solution.DataBase;
 
 public class AppDbContext() : DbContext
 {
-	private static string connectionString = string.Empty;
+    public DbSet<CompetitionEntity> Competitions { get; set; }
+
+    public DbSet<JudgeEntity> Jury { get; set; }
+
+    public DbSet<LocationEntity> Locations { get; set; }
+
+    public DbSet<MemberEntity> Members { get; set; }
+
+    public DbSet<TeamEntity> Teams { get; set; }
+
+    private static string connectionString = string.Empty;
 
 	static AppDbContext()
 	{
