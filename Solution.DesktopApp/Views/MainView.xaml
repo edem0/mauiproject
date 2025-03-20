@@ -6,10 +6,10 @@
              x:Class="Solution.DesktopApp.MainView">
 
     <Grid VerticalOptions="Center" HorizontalOptions="Center">
-        <Label Text="Lecsófőző Verseny Adatbázis" 
+        <Label Text="Ratatouille Competition Database" 
                TextColor="Black" FontSize="Title" FontAttributes="Bold"
                HorizontalTextAlignment="Center"
-               Margin="0,20,0,20" />
+               Margin="0,-450,0,0" />
     </Grid>
 
 </ContentPage>

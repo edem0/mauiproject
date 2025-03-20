@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="Solution.DesktopApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -8,23 +7,46 @@
     xmlns:views="clr-namespace:Solution.DesktopApp.Views"
     x:DataType="viewModels:AppShellViewModel"
     Shell.FlyoutBehavior="Disabled"
-    Title="Motorcycle Database"
-    BackgroundColor="Black">
+    Title="Ratatouille Competition Database">
 
     <Shell.Resources>
         <Style x:Key="ShellContentStyle" TargetType="Element">
-            <Setter Property="Shell.BackgroundColor" Value="#090909" />
-            <Setter Property="Shell.TitleColor" Value="WhiteSmoke" />
+            <Setter Property="Shell.BackgroundColor" Value="White" />
+            <Setter Property="Shell.TitleColor" Value="Black" />
             <Setter Property="Shell.Background" Value="Gray" />
         </Style>
     </Shell.Resources>
 
     <Shell.MenuBarItems>
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="Exit" Command="{Binding ExitCommand}" />
+        </MenuBarItem>
 
-      </Shell.MenuBarItems>
+        <MenuBarItem Text="Competitions">
+            <MenuFlyoutItem Text="Register new" Command="{Binding AddNewCompetitionCommand}">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black"/>
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutItem Text="View List" Command="{Binding ListAllCompetitionsCommand}">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+        </MenuBarItem>
+    </Shell.MenuBarItems>
 
     <ShellContent Style="{StaticResource ShellContentStyle}"
                   ContentTemplate="{DataTemplate local:MainView}"
                   Route="MainView" />
+
+    <ShellContent Title="Create/Edit Competition"
+                  ContentTemplate="{DataTemplate views:CreateOrEditCompetitionView}"
+                  Route="CreateOrEditCompetitionView" />
+
+    <ShellContent Title="Competition List"
+                  ContentTemplate="{DataTemplate views:CompetitionListView}"
+                  Route="CompetitionListView" />
 
 </Shell>

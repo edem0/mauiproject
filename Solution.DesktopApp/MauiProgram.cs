@@ -1,4 +1,6 @@
-﻿namespace Solution.DesktopApp;
+﻿using Solution.DesktopApp.Views;
+
+namespace Solution.DesktopApp;
 
 public static class MauiProgram
 {
@@ -16,9 +18,19 @@ public static class MauiProgram
                .UseAppSettingsMapping()
                .UseDIConfiguration()
                .UseMsSqlServer();
+        Routing.RegisterRoute(nameof(CompetitionListView), typeof(CompetitionListView));
+        Routing.RegisterRoute(nameof(CreateOrEditCompetitionView), typeof(CreateOrEditCompetitionView));
+
+        builder.Services.AddTransient<CreateOrEditCompetitionViewModel>();
+        builder.Services.AddTransient<CreateOrEditCompetitionView>();
+
+        builder.Services.AddTransient<CompetitionListViewModel>();
+        builder.Services.AddTransient<CompetitionListView>();
+
+
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
         return builder.Build();

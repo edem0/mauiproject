@@ -1,23 +1,26 @@
-﻿namespace Solution.DesktopApp.ViewModels;
+﻿using Solution.DesktopApp.Views;
+
+namespace Solution.DesktopApp.ViewModels;
 
 [ObservableObject]
 public partial class AppShellViewModel
 {
     public IAsyncRelayCommand ExitCommand => new AsyncRelayCommand(OnExitAsync);
-
-    public IAsyncRelayCommand AddNewMotorcycleCommand => new AsyncRelayCommand(OnAddNewMotorcycleAsync);
-    public IAsyncRelayCommand ListAllMotorcyclesCommand => new AsyncRelayCommand(OnListAllMotorcyclesAsync);
+    public IAsyncRelayCommand AddNewCompetitionCommand => new AsyncRelayCommand(OnAddNewCompetitionAsync);
+    public IAsyncRelayCommand ListAllCompetitionsCommand => new AsyncRelayCommand(OnListAllCompetitionsAsync);
 
 
     private async Task OnExitAsync() => Application.Current.Quit();
 
-    private async Task OnAddNewMotorcycleAsync()
+    private async Task OnAddNewCompetitionAsync()
     {
         Shell.Current.ClearNavigationStack();
+        await Shell.Current.GoToAsync(nameof(CreateOrEditCompetitionView));
     }
 
-    private async Task OnListAllMotorcyclesAsync()
+    private async Task OnListAllCompetitionsAsync()
     {
         Shell.Current.ClearNavigationStack();
+        await Shell.Current.GoToAsync(nameof(CompetitionListView));
     }
 }
