@@ -12,19 +12,38 @@ namespace Solution.Database.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "City",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PostalCode = table.Column<long>(type: "bigint", nullable: false),
-                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublicAreaName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HouseNumber = table.Column<long>(type: "bigint", nullable: false)
+                    CityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_City", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Location",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AreaName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HouseNumber = table.Column<long>(type: "bigint", nullable: false),
+                    CityId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Location", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Location_City_CityId",
+                        column: x => x.CityId,
+                        principalTable: "City",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,10 +146,9 @@ namespace Solution.Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Location_PostalCode",
+                name: "IX_Location_CityId",
                 table: "Location",
-                column: "PostalCode",
-                unique: true);
+                column: "CityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Member_TeamId",
@@ -160,6 +178,9 @@ namespace Solution.Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "Location");
+
+            migrationBuilder.DropTable(
+                name: "City");
         }
     }
 }

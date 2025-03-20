@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Solution.Database.Entities;
 
 [Table("Location")]
-[Index(nameof(PostalCode), IsUnique = true)]
 public class LocationEntity
 {
     [Key]
@@ -12,11 +11,15 @@ public class LocationEntity
     public uint Id { get; set; }
 
     [Required]
-    [Range(1000, 9999)]
-    public uint PostalCode { get; set; }
+    public string AreaName { get; set; }
 
     [Required]
-    public string LocationName { get; set; }
+    public uint HouseNumber { get; set; }
+
+    [ForeignKey("City")]
+    public uint CityId { get; set; }
+
+    public virtual CityEntity City { get; set; }
 
 
     public virtual IReadOnlyCollection<CompetitionEntity> Competitions { get; set; }

@@ -6,17 +6,17 @@ public class LocationModel : IObjectValidator<uint>
 {
     public uint Id { get; set; }
 
-    public uint PostalCode { get; set; }
+    public string AreaName { get; set; }
 
-    public string LocationName { get; set; }
+    public uint HouseNumber { get; set; }
 
     public LocationModel() { }
 
-    public LocationModel(uint id, uint postalCode, string locationName)
+    public LocationModel(uint id, string areaName, uint houseNumber)
     {
         Id = id;
-        PostalCode = postalCode;
-        LocationName = locationName;
+        AreaName = areaName;
+        HouseNumber = houseNumber;
     }
 
     public LocationModel(LocationEntity entity)
@@ -27,7 +27,15 @@ public class LocationModel : IObjectValidator<uint>
         }
 
         Id = entity.Id;
-        PostalCode = entity.PostalCode;
-        LocationName = entity.LocationName;
+        AreaName = entity.AreaName;
+        HouseNumber = entity.HouseNumber;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is LocationModel model &&
+            this.Id == model.Id &&
+            this.AreaName == model.AreaName &&
+            this.HouseNumber == model.HouseNumber;
     }
 }

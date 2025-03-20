@@ -12,7 +12,7 @@ public class JuryModel : IObjectValidator<uint>
 
     public string PhoneNumber { get; set; }
 
-    public JuryModel() { }
+    public JuryModel(ICollection<JudgeEntity> jury) { }
 
     public JuryModel(uint id, string name, string emailAddress, string phoneNumber) 
     {

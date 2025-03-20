@@ -22,6 +22,26 @@ namespace Solution.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Solution.Database.Entities.CityEntity", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("PostalCode")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("City");
+                });
+
             modelBuilder.Entity("Solution.Database.Entities.CompetitionEntity", b =>
                 {
                     b.Property<long>("Id")
@@ -92,17 +112,19 @@ namespace Solution.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("LocationName")
+                    b.Property<string>("AreaName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PostalCode")
+                    b.Property<long>("CityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("HouseNumber")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostalCode")
-                        .IsUnique();
+                    b.HasIndex("CityId");
 
                     b.ToTable("Location");
                 });
@@ -178,6 +200,17 @@ namespace Solution.Database.Migrations
                     b.Navigation("Competition");
                 });
 
+            modelBuilder.Entity("Solution.Database.Entities.LocationEntity", b =>
+                {
+                    b.HasOne("Solution.Database.Entities.CityEntity", "City")
+                        .WithMany("Locations")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("City");
+                });
+
             modelBuilder.Entity("Solution.Database.Entities.MemberEntity", b =>
                 {
                     b.HasOne("Solution.Database.Entities.TeamEntity", "Team")
@@ -194,6 +227,11 @@ namespace Solution.Database.Migrations
                     b.HasOne("Solution.Database.Entities.CompetitionEntity", null)
                         .WithMany("Teams")
                         .HasForeignKey("CompetitionEntityId");
+                });
+
+            modelBuilder.Entity("Solution.Database.Entities.CityEntity", b =>
+                {
+                    b.Navigation("Locations");
                 });
 
             modelBuilder.Entity("Solution.Database.Entities.CompetitionEntity", b =>
