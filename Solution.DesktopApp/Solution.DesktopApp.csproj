@@ -103,6 +103,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\AddJuryView.xaml.cs">
+	    <DependentUpon>AddJuryView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\AddTeamMemberView.xaml.cs">
+	    <DependentUpon>AddTeamMemberView.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\AddTeamView.xaml.cs">
+	    <DependentUpon>AddTeamView.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\MainView.xaml.cs">
 	    <DependentUpon>MainView.xaml</DependentUpon>
 	  </Compile>
@@ -122,10 +131,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\AddJuryView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\AddTeamMemberView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CompetitionListView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CreateOrEditCompetitionView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\AddTeamView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
