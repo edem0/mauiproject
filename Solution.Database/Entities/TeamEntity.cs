@@ -16,7 +16,7 @@ public class TeamEntity
     public string Name { get; set; }
 
     [Required]
-    public uint Point {  get; set; }
+    public uint Points {  get; set; }
 
     [Range(1, 10)]
     public virtual ICollection<MemberEntity> Members { get; set; }

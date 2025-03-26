@@ -22,7 +22,7 @@ public class CompetitionEntity
     [Required]
     public DateTime Date { get; set; }
 
-    public ICollection<TeamEntity> Teams { get; set; }
+    public virtual  ICollection<TeamEntity> Teams { get; set; }
 
-    public ICollection<JudgeEntity> Jury { get; set; }
+    public virtual ICollection<JudgeEntity> Jury { get; set; }
 }

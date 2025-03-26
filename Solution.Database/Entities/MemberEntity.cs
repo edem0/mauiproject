@@ -11,6 +11,12 @@ public class MemberEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public uint Id { get; set; }
 
+    [StringLength(128)]
+    public string? ImageId { get; set; }
+
+    [StringLength(512)]
+    public string? WebContentLink { get; set; }
+
     [Required]
     [StringLength(20)]
     public string Name { get; set; }

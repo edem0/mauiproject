@@ -6,6 +6,10 @@ public class TeamModel
 {
     public uint Id { get; set; }
 
+    public string Name { get; set; }
+
+    public uint Points { get; set; }
+
     public virtual ICollection<MemberEntity> Members { get; set; }
 
     public TeamModel(uint id, ICollection<MemberEntity> members)

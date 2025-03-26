@@ -6,6 +6,10 @@ public class MemberModel : IObjectValidator<uint>
 {
     public uint Id { get; set; }
 
+    public string ImageId { get; set; }
+
+    public string WebContentLink { get; set; }
+
     public string Name { get; set; }
 
     public uint TeamId { get; set; }
