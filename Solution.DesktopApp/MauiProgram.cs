@@ -20,12 +20,21 @@ public static class MauiProgram
                .UseMsSqlServer();
         Routing.RegisterRoute(nameof(CompetitionListView), typeof(CompetitionListView));
         Routing.RegisterRoute(nameof(CreateOrEditCompetitionView), typeof(CreateOrEditCompetitionView));
+        Routing.RegisterRoute(nameof(AddJuryView), typeof(AddJuryView));
+        Routing.RegisterRoute(nameof(AddTeamView), typeof(AddTeamView));
+        Routing.RegisterRoute(nameof(AddTeamMemberView), typeof(AddTeamMemberView));
+
+        builder.Services.AddTransient<CreateOrEditCompetitionView>();
+        builder.Services.AddTransient<CompetitionListView>();
+        builder.Services.AddTransient<AddJuryView>();
+        builder.Services.AddTransient<AddTeamView>();
+        builder.Services.AddTransient<AddTeamMemberView>();
 
         builder.Services.AddTransient<CreateOrEditCompetitionViewModel>();
-        builder.Services.AddTransient<CreateOrEditCompetitionView>();
-
         builder.Services.AddTransient<CompetitionListViewModel>();
-        builder.Services.AddTransient<CompetitionListView>();
+        builder.Services.AddTransient<AddJuryViewModel>();
+        builder.Services.AddTransient<AddTeamViewModel>();
+        builder.Services.AddTransient<AddTeamMemberViewModel>();
 
 
 

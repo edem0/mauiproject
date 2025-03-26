@@ -103,6 +103,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Components\CompetitionListComponent.xaml.cs">
+	    <DependentUpon>CompetitionListComponent.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\AddJuryView.xaml.cs">
 	    <DependentUpon>AddJuryView.xaml</DependentUpon>
 	  </Compile>
@@ -131,6 +134,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Components\CompetitionListComponent.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\AddJuryView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

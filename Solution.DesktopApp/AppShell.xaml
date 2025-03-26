@@ -23,13 +23,31 @@
         </MenuBarItem>
 
         <MenuBarItem Text="Competitions">
-            <MenuFlyoutItem Text="Register new" Command="{Binding AddNewCompetitionCommand}">
+            <MenuFlyoutItem Text="Add New Competition" Command="{Binding AddNewCompetitionCommand}">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black"/>
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
 
             <MenuFlyoutItem Text="View List" Command="{Binding ListAllCompetitionsCommand}">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutItem Text="Add Juries" Command="{Binding AddJuryCommand}">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutItem Text="Add Teams" Command="{Binding AddTeamCommand}">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+
+            <MenuFlyoutItem Text="Add Team Members" Command="{Binding AddTeamMemberCommand}">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#x25B6;" FontFamily="Arial" Color="Black" />
                 </MenuFlyoutItem.IconImageSource>
@@ -48,5 +66,17 @@
     <ShellContent Title="Competition List"
                   ContentTemplate="{DataTemplate views:CompetitionListView}"
                   Route="CompetitionListView" />
+
+    <ShellContent Title="Add Jury"
+                  ContentTemplate="{DataTemplate views:AddJuryView}"
+                  Route="AddJuryView" />
+
+    <ShellContent Title="Add Team"
+                  ContentTemplate="{DataTemplate views:AddTeamView}"
+                  Route="AddTeamView" />
+
+    <ShellContent Title="Add Team Member"
+                  ContentTemplate="{DataTemplate views:AddTeamMemberView}"
+                  Route="AddTeamMemberView" />
 
 </Shell>
