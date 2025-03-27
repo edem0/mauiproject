@@ -1,12 +1,12 @@
 ﻿namespace Solution.ValidationLibrary.ValidationRules;
 
-public class NotMoreOrLessThanXRule<T>(int count) : IValidationRule<T>
+public class NotMoreOrLessThanXRule<T>(int count, string selectable) : IValidationRule<T>
 {
     public string ValidationMessage { get; set; }
 
     public int Amount { get; set; }
 
-    public string Selectable { get; set; }
+    public string Selectable { get; set; } = selectable;
 
     public bool Check(object value)
     {

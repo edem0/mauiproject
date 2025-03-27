@@ -4,6 +4,8 @@ public class PickerValidationRule<T> : IValidationRule<T> where T: IObjectValida
 {
     public string ValidationMessage { get; set; } = "Manufacturer must be selected";
 
+    public string Selectable { get; set; } = string.Empty;
+
     public bool Check(object value)
     {
         var isTypeOfT = value is T;

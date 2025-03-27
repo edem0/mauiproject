@@ -10,9 +10,9 @@ public partial class CompetitionModel
 
     public ValidatableObject<DateTime> Date { get; protected set; }
 
-    public List<JuryModel> Jury { get; set; }
+    public ValidatableObject<List<JuryModel>> Jury { get; set; }
 
-    public List<TeamModel> Teams { get; set; }
+    public  List<TeamModel> Teams { get; set; }
 
     public ValidatableObject<LocationModel> Location { get; set; }
 
@@ -21,6 +21,7 @@ public partial class CompetitionModel
         this.Name = new ValidatableObject<string>();
         this.Date = new ValidatableObject<DateTime>();
         this.Location = new ValidatableObject<LocationModel>();
+        this.Jury = new ValidatableObject<List<JuryModel>>();
 
         AddValidators();
     }
@@ -30,7 +31,7 @@ public partial class CompetitionModel
         this.Id = entity.Id;
         this.Name.Value = entity.Name;
         this.Date.Value = entity.Date;
-        this.Jury = entity.Jury.Select(x => new JuryModel(x)).ToList();
+        this.Jury.Value = entity.Jury.Select(x => new JuryModel(x)).ToList();
         this.Location.Value = new LocationModel(entity.Location);
         this.Teams = entity.Teams.Select(x => new TeamModel(x)).ToList();
     }
@@ -42,18 +43,18 @@ public partial class CompetitionModel
             Id = this.Id,
             Name = this.Name.Value,
             Date = this.Date.Value,
-            Jury = this.Jury.Select(x => new JudgeEntity
+            Jury = this.Jury.Value.Select(x => new JudgeEntity
             { 
                 Id = x.Id,
-                Name = x.Name,
-                EmailAddress = x.EmailAddress,
-                PhoneNumber = x.PhoneNumber
+                Name = x.Name.Value,
+                EmailAddress = x.EmailAddress.Value,
+                PhoneNumber = x.PhoneNumber.Value
             }).ToList(),
             Teams = this.Teams.Select(x => new TeamEntity
             {
                 Id = x.Id,
-                Name = x.Name,
-                Points = x.Points,
+                Name = x.Name.Value,
+                Points = x.Points.Value,
             }).ToList()
 
         };
@@ -64,18 +65,18 @@ public partial class CompetitionModel
         entity.Id = this.Id;
         entity.Name = this.Name.Value;
         entity.Date = this.Date.Value;
-        entity.Jury = this.Jury.Select(x => new JudgeEntity
+        entity.Jury = this.Jury.Value.Select(x => new JudgeEntity
         {
             Id = x.Id,
-            Name = x.Name,
-            EmailAddress = x.EmailAddress,
-            PhoneNumber = x.PhoneNumber
+            Name = x.Name.Value,
+            EmailAddress = x.EmailAddress.Value,
+            PhoneNumber = x.PhoneNumber.Value
         }).ToList();
         entity.Teams = this.Teams.Select(x => new TeamEntity
         {
             Id = x.Id,
-            Name = x.Name,
-            Points = x.Points,
+            Name = x.Name.Value,
+            Points = x.Points.Value,
         }).ToList();
     }
 
@@ -86,13 +87,19 @@ public partial class CompetitionModel
             ValidationMessage = "Name field is required"
         });
 
-        this.Date.Validations.Add(new IsNotNullOrEmptyRule<DateTime>
-        {
-            ValidationMessage = "Name field is required"
-        });
+        this.Date.Validations.AddRange(
+        [
+            new IsNotNullOrEmptyRule<DateTime> 
+            {
+                ValidationMessage = "Date field is required!"
+            },
+            new DateTimeValidationRule<DateTime>(Date.Value) 
+            {
+                ValidationMessage = "Given date can't be greater than the current date!"
+            }
+        ]);
 
-
-
+        this.Jury.Validations.Add(new NotMoreOrLessThanXRule<List<JuryModel>>(3, "jury"){});
     }
 
 }

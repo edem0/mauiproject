@@ -10,36 +10,52 @@ public class MemberModel : IObjectValidator<uint>
 
     public string WebContentLink { get; set; }
 
-    public string Name { get; set; }
+    public ValidatableObject<string> Name { get; set; }
 
-    public uint TeamId { get; set; }
+    public ValidatableObject<TeamModel> Team { get; set; }
 
-    public MemberModel() { }
-
-    public MemberModel(uint id, string name, uint teamId)
+    public MemberModel()
     {
-        Id = id;
-        Name = name;
-        TeamId = teamId;
+        this.Name = new ValidatableObject<string>();
+        this.Team = new ValidatableObject<TeamModel>();
+
+        AddValidators();
     }
 
-    public MemberModel(MemberEntity entity)
+    public MemberModel(MemberEntity entity): this()
     {
-        if(entity == null)
+        this.Id = entity.Id;
+        this.Name.Value = entity.Name;
+        this.Team.Value = new TeamModel(entity.Team);
+    }
+
+    public MemberEntity ToEntity()
+    {
+        return new MemberEntity
         {
-            return;
-        }
-
-        Id = entity.Id;
-        Name = entity.Name;
-        TeamId = entity.TeamId;
+            Id = this.Id,
+            Name = this.Name.Value,
+            TeamId = Team.Value.Id,
+        };
     }
 
-    public override bool Equals(object? obj)
+    public void ToEntity(MemberEntity entity)
     {
-        return obj is MemberModel model &&
-            this.Id == model.Id &&
-            this.Name == model.Name &&
-            this.TeamId == model.TeamId;
+        entity.Id = this.Id;
+        entity.Name = this.Name.Value;
+        entity.TeamId = this.Team.Value.Id;
+    } 
+
+    private void AddValidators()
+    {
+        this.Name.Validations.Add(new IsNotNullOrEmptyRule<string>
+        {
+            ValidationMessage = "Name field can't be empty!"
+        });
+
+        this.Team.Validations.Add(new PickerValidationRule<TeamModel<uint>>()
+        {
+            ValidationMessage = "A team must be selected!"
+        });
     }
 }

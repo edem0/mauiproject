@@ -4,6 +4,9 @@ public class NullableIntegerRule<T> : IValidationRule<T>
 {
     public string ValidationMessage { get; set; }
 
+    public string Selectable { get; set; } = string.Empty;
+
+
     public bool Check(object value)
     {
         if(value is not uint data)

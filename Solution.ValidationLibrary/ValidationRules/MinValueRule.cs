@@ -4,7 +4,9 @@ public class MinValueRule<T>(int minValue) : IValidationRule<T>
 {
   public string ValidationMessage { get; set; } = $"Length can't bee less then {minValue}.";
 
-  public bool Check(object value)
+  public string Selectable { get; set; } = string.Empty;
+
+    public bool Check(object value)
   {
       if(!int.TryParse(value?.ToString(), out int data))
       { 

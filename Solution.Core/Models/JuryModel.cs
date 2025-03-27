@@ -10,41 +10,63 @@ public class JuryModel : IObjectValidator<uint>
 
     public string WebContentLink { get; set; }
 
-    public string Name { get; set; }
+    public ValidatableObject<string> Name { get; set; }
 
-    public string EmailAddress { get; set; }
+    public ValidatableObject<string> EmailAddress { get; set; }
 
-    public string PhoneNumber { get; set; }
+    public ValidatableObject<string> PhoneNumber { get; set; }
 
-    public JuryModel(ICollection<JudgeEntity> jury) { }
-
-    public JuryModel(uint id, string name, string emailAddress, string phoneNumber) 
+    public JuryModel()
     {
-        Id = id;
-        Name = name;
-        EmailAddress = emailAddress;
-        PhoneNumber = phoneNumber;
+        this.Name = new ValidatableObject<string>();
+        this.EmailAddress = new ValidatableObject<string>();
+        this.PhoneNumber = new ValidatableObject<string>();
+
+        AddValidators();
     }
 
-    public JuryModel(JudgeEntity judge)
+    public JuryModel(JudgeEntity judge): this()
     {
-        if(judge == null)
+        this.Id = judge.Id;
+        this.Name.Value = judge.Name;
+        this.EmailAddress.Value = judge.EmailAddress;
+        this.PhoneNumber.Value = judge.PhoneNumber;
+    }
+
+    public JudgeEntity ToEntity()
+    {
+        return new JudgeEntity
         {
-            return;
-        }
-
-        Id = judge.Id;
-        Name = judge.Name;
-        EmailAddress = judge.EmailAddress;
-        PhoneNumber = judge.PhoneNumber;
+            Id = this.Id,
+            Name = this.Name.Value,
+            EmailAddress = this.EmailAddress.Value,
+            PhoneNumber = this.PhoneNumber.Value
+        };
     }
 
-    public override bool Equals(object? obj)
+    public void ToEntity(JudgeEntity entity)
     {
-        return obj is JuryModel model &&
-            this.Id == model.Id &&
-            this.Name == model.Name &&
-            this.EmailAddress == model.EmailAddress &&
-            this.PhoneNumber == model.PhoneNumber;
+        entity.Id = this.Id;
+        entity.Name = this.Name.Value;
+        entity.EmailAddress = this.EmailAddress.Value;
+        entity.PhoneNumber = this.PhoneNumber.Value;
+    }
+
+    private void AddValidators()
+    {
+        this.Name.Validations.Add(new IsNotNullOrEmptyRule<string>
+        {
+            ValidationMessage = "Name field can't be empty!"
+        });
+
+        this.EmailAddress.Validations.Add(new IsNotNullOrEmptyRule<string>
+        {
+            ValidationMessage = "Email address' field can't be empty!"
+        });
+
+        this.PhoneNumber.Validations.Add(new IsNotNullOrEmptyRule<string>
+        {
+            ValidationMessage = "Phone number's field can't be empty!"
+        });
     }
 }
