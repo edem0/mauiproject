@@ -2,7 +2,7 @@
 
 namespace Solution.Core.Models;
 
-public class TeamModel : 
+public class TeamModel : IObjectValidator<uint>
 {
     public uint Id { get; set; }
 
@@ -39,8 +39,8 @@ public class TeamModel :
             Members = this.Members.Value.Select(x => new MemberEntity
             {
                 Id = x.Id,
-                Name = x.Name,
-                TeamId = x.TeamId
+                Name = x.Name.Value,
+                TeamId = x.Team.Value.Id,
             }).ToList()
         };
     }
@@ -53,8 +53,8 @@ public class TeamModel :
         entity.Members = this.Members.Value.Select(x => new MemberEntity 
         { 
             Id = x.Id,
-            Name = x.Name,
-            TeamId = x.TeamId
+            Name = x.Name.Value,
+            TeamId = x.Team.Value.Id,
         }).ToList();
     }
 

@@ -53,7 +53,7 @@ public class MemberModel : IObjectValidator<uint>
             ValidationMessage = "Name field can't be empty!"
         });
 
-        this.Team.Validations.Add(new PickerValidationRule<TeamModel<uint>>()
+        this.Team.Validations.Add(new PickerValidationRule<TeamModel>()
         {
             ValidationMessage = "A team must be selected!"
         });

@@ -6,36 +6,55 @@ public class LocationModel : IObjectValidator<uint>
 {
     public uint Id { get; set; }
 
-    public string AreaName { get; set; }
+    public ValidatableObject<string> AreaName { get; set; }
 
-    public uint HouseNumber { get; set; }
+    public ValidatableObject<uint?> HouseNumber { get; set; }
 
-    public LocationModel() { }
+    public ValidatableObject<CityModel> City { get; protected set; }
 
-    public LocationModel(uint id, string areaName, uint houseNumber)
+    public LocationModel() 
     {
-        Id = id;
-        AreaName = areaName;
-        HouseNumber = houseNumber;
+        this.AreaName = new ValidatableObject<string>();
+        this.HouseNumber = new ValidatableObject<uint?>();
+
+        AddValidators();
     }
 
-    public LocationModel(LocationEntity entity)
+    public LocationModel(LocationEntity entity): this()
     {
-        if(entity == null)
+        this.Id = entity.Id;
+        this.AreaName.Value = entity.AreaName;
+        this.HouseNumber.Value = entity.HouseNumber;
+
+    }
+
+    public LocationEntity ToEntity()
+    {
+        return new LocationEntity
         {
-            return;
-        }
-
-        Id = entity.Id;
-        AreaName = entity.AreaName;
-        HouseNumber = entity.HouseNumber;
+            AreaName = AreaName.Value,
+            HouseNumber = HouseNumber.Value ?? 0,
+            CityId = City.Value.Id
+        };
     }
 
-    public override bool Equals(object? obj)
+    public void ToEntity(LocationEntity entity)
     {
-        return obj is LocationModel model &&
-            this.Id == model.Id &&
-            this.AreaName == model.AreaName &&
-            this.HouseNumber == model.HouseNumber;
+        entity.AreaName = AreaName.Value;
+        entity.HouseNumber = HouseNumber.Value ?? 0;
+        entity.CityId = City.Value.Id;
+    }
+
+    private void AddValidators()
+    {
+        this.AreaName.Validations.Add(new IsNotNullOrEmptyRule<string>
+        {
+            ValidationMessage = "This field can't be empty!"
+        });
+
+        this.HouseNumber.Validations.Add(new NullableIntegerRule<uint?>
+        {
+            ValidationMessage = "This field can't be empty!"
+        });
     }
 }

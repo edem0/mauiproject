@@ -2,7 +2,7 @@
 
 public class PickerValidationRule<T> : IValidationRule<T> where T: IObjectValidator<uint>
 {
-    public string ValidationMessage { get; set; } = "Manufacturer must be selected";
+    public string ValidationMessage { get; set; }
 
     public string Selectable { get; set; } = string.Empty;
 
