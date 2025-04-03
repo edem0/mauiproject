@@ -55,7 +55,13 @@ public partial class CompetitionModel
                 Id = x.Id,
                 Name = x.Name.Value,
                 Points = x.Points.Value,
-            }).ToList()
+            }).ToList(),
+            Location = new LocationEntity{
+                Id = Location.Value.Id,
+                AreaName = Location.Value.AreaName.Value,
+                HouseNumber = Location.Value.HouseNumber.Value,
+                CityId = Location.Value.City.Value.Id
+            }
 
         };
     }

@@ -8,14 +8,14 @@ public class LocationModel : IObjectValidator<uint>
 
     public ValidatableObject<string> AreaName { get; set; }
 
-    public ValidatableObject<uint?> HouseNumber { get; set; }
+    public ValidatableObject<uint> HouseNumber { get; set; }
 
-    public ValidatableObject<CityModel> City { get; protected set; }
+    public ValidatableObject<CityModel> City { get; set; }
 
     public LocationModel() 
     {
         this.AreaName = new ValidatableObject<string>();
-        this.HouseNumber = new ValidatableObject<uint?>();
+        this.HouseNumber = new ValidatableObject<uint>();
 
         AddValidators();
     }
@@ -33,7 +33,7 @@ public class LocationModel : IObjectValidator<uint>
         return new LocationEntity
         {
             AreaName = AreaName.Value,
-            HouseNumber = HouseNumber.Value ?? 0,
+            HouseNumber = HouseNumber.Value,
             CityId = City.Value.Id
         };
     }
@@ -41,7 +41,7 @@ public class LocationModel : IObjectValidator<uint>
     public void ToEntity(LocationEntity entity)
     {
         entity.AreaName = AreaName.Value;
-        entity.HouseNumber = HouseNumber.Value ?? 0;
+        entity.HouseNumber = HouseNumber.Value;
         entity.CityId = City.Value.Id;
     }
 
@@ -52,7 +52,7 @@ public class LocationModel : IObjectValidator<uint>
             ValidationMessage = "This field can't be empty!"
         });
 
-        this.HouseNumber.Validations.Add(new NullableIntegerRule<uint?>
+        this.HouseNumber.Validations.Add(new NullableIntegerRule<uint>
         {
             ValidationMessage = "This field can't be empty!"
         });

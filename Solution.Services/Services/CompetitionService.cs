@@ -57,37 +57,37 @@ public class CompetitionService(AppDbContext dbContext) : ICompetitionService
         return result > 0 ? Result.Success : Error.NotFound();
     }
 
-    public async Task<ErrorOr<TeamModel>> GetByIdAsync(uint teamId)
+    public async Task<ErrorOr<CompetitionModel>> GetByIdAsync(uint competitionId)
     {
-        var team = await dbContext.Teams.AsNoTracking()
-                                 .FirstOrDefaultAsync(x => x.Id == teamId);
+        var competition = await dbContext.Competitions.AsNoTracking()
+                                 .FirstOrDefaultAsync(x => x.Id == competitionId);
 
-        if (team is null)
+        if (competition is null)
         {
-            return Error.NotFound(description: "Team not found.");
+            return Error.NotFound(description: "Competition not found.");
         }
 
-        return new TeamModel(team);
+        return new CompetitionModel(competition);
     }
 
-    public async Task<ErrorOr<List<TeamModel>>> GetAllAsync() => await dbContext.Teams.AsNoTracking()
-                                         .Select(x => new TeamModel(x))
+    public async Task<ErrorOr<List<CompetitionModel>>> GetAllAsync() => await dbContext.Competitions.AsNoTracking()
+                                         .Select(x => new CompetitionModel(x))
                                          .ToListAsync();
 
-    public async Task<ErrorOr<PaginationModel<TeamModel>>> GetPagedAsync(int page = 0)
+    public async Task<ErrorOr<PaginationModel<CompetitionModel>>> GetPagedAsync(int page = 0)
     {
 
         page = page < 0 ? 0 : page - 1;
 
-        var teams = await dbContext.Teams.AsNoTracking()
+        var competitions = await dbContext.Competitions.AsNoTracking()
                                           .Skip(page * ROW_COUNT)
                                           .Take(ROW_COUNT)
-                                          .Select(x => new TeamModel(x))
+                                          .Select(x => new CompetitionModel(x))
                                           .ToListAsync();
-        var paginationModel = new PaginationModel<TeamModel>
+        var paginationModel = new PaginationModel<CompetitionModel>
         {
-            Items = teams,
-            Count = await dbContext.Teams.CountAsync()
+            Items = competitions,
+            Count = await dbContext.Competitions.CountAsync()
         };
 
         return paginationModel;
