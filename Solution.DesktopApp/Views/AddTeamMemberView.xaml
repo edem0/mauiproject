@@ -11,15 +11,13 @@
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing"/>
-        <toolkit:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+        <toolkit:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing"/>
     </ContentPage.Behaviors>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <StackLayout Orientation="Vertical"
-                         Style="{StaticResource FormLineContainer}"
-                         Margin="40">
+            <StackLayout Orientation="Vertical" Style="{StaticResource FormLineContainer}" Margin="40">
                 <Border Stroke="{AppThemeBinding Light=Black, Dark=White}"
                         StrokeThickness="2"
                         Background="Transparent"
@@ -35,12 +33,12 @@
 
             <VerticalStackLayout Style="{StaticResource FormLineContainer}">
                 <Label Text="Member Name" Style="{StaticResource InputLabel}"/>
-                <Entry Text="{Binding Name.Value}">
+                <Entry Text="{Binding Member.Name.Value}">
                     <Entry.Behaviors>
                         <toolkit:EventToCommandBehavior EventName="TextChanged" Command="{Binding ValidationCommand}" />
                     </Entry.Behaviors>
                 </Entry>
-                <Label Text="{Binding Name.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
+                <Label Text="{Binding Member.Name.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
                        Style="{StaticResource ValidationErrorLabelStyle}" />
             </VerticalStackLayout>
 
@@ -51,4 +49,3 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
-
