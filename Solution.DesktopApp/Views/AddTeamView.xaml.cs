@@ -1,9 +1,13 @@
 namespace Solution.DesktopApp.Views;
 
-public partial class CreateTeam : ContentPage
+public partial class AddTeamView : ContentPage
 {
-	public CreateTeam()
-	{
-		InitializeComponent();
-	}
+    public AddTeamViewModel ViewModel => this.BindingContext as AddTeamViewModel;
+    public static string Name => nameof(AddTeamView);
+
+    public AddTeamView(AddTeamViewModel viewModel)
+    {
+        BindingContext = viewModel;
+        InitializeComponent();
+    }
 }
