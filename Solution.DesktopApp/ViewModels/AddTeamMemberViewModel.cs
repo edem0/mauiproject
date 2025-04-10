@@ -3,10 +3,13 @@ using Solution.Core.Models;
 using Solution.ValidationLibrary;
 using System.Windows.Input;
 using Microsoft.Maui.Storage;
+using Microsoft.Maui.Controls;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Solution.DesktopApp.ViewModels
 {
-    public class AddTeamMemberViewModel
+    public partial class AddTeamMemberViewModel : ObservableObject
     {
         public IAsyncRelayCommand AppearingCommand => new AsyncRelayCommand(OnAppearingAsync);
         public IAsyncRelayCommand DisappearingCommand => new AsyncRelayCommand(OnDisappearingAsync);
@@ -14,53 +17,75 @@ namespace Solution.DesktopApp.ViewModels
         public IAsyncRelayCommand ImageSelectCommand => new AsyncRelayCommand(OnImageSelectAsync);
         public ICommand ValidationCommand => new RelayCommand(OnValidate);
 
-        private delegate Task ButtonActionDelagate();
-        private ButtonActionDelagate asyncButtonAction;
+        private delegate Task ButtonActionDelegate();
+        private ButtonActionDelegate asyncButtonAction;
 
         [ObservableProperty]
-        private ImageSource Image;
+        private ImageSource image;
 
-        private FileResult selectedFile = null;
+        [ObservableProperty]
+        private bool isNameInvalid;
 
-        public MemberModel Member { get; set; }
+        [ObservableProperty]
+        private bool isImageInvalid;
+
+        private FileResult selectedFile;
+
+        public MemberModel Member { get; }
 
         public AddTeamMemberViewModel()
         {
             Member = new MemberModel();
+            asyncButtonAction = DefaultSubmitActionAsync;
         }
 
-        private async Task OnAppearingAsync()
+        private Task OnAppearingAsync()
         {
-            
+            return Task.CompletedTask;
         }
 
-        private async Task OnDisappearingAsync()
+        private Task OnDisappearingAsync()
         {
-            
+            return Task.CompletedTask;
         }
 
-        private async Task OnSubmitAsync() => await asyncButtonAction();
+        private async Task OnSubmitAsync()
+        {
+            OnValidate();
+
+            if (!IsNameInvalid && !IsImageInvalid)
+            {
+                await asyncButtonAction();
+            }
+        }
+
+        private Task DefaultSubmitActionAsync()
+        {
+            return Task.CompletedTask;
+        }
 
         private async Task OnImageSelectAsync()
         {
-            var selectedFile = await FilePicker.PickAsync(new PickOptions
+#pragma warning disable CS8601
+            selectedFile = await FilePicker.PickAsync(new PickOptions
             {
                 FileTypes = FilePickerFileType.Images,
-                PickerTitle = "Please select the motorcycle image"
+                PickerTitle = "Please select an image"
             });
+#pragma warning restore CS8601
 
-            if (selectedFile is null)
+            if (selectedFile != null)
             {
-                return;
+                var stream = await selectedFile.OpenReadAsync();
+                Image = ImageSource.FromStream(() => stream);
             }
-
-            var stream = await selectedFile.OpenReadAsync();
-            Image = ImageSource.FromStream(() => stream);
         }
 
         private void OnValidate()
         {
-            Member.Name.Validate();
+            var nameValue = Member.Name?.Value?.Trim();
+            IsNameInvalid = string.IsNullOrWhiteSpace(nameValue) || nameValue.Length < 3;
+            IsImageInvalid = Image == null;
         }
     }
 }
