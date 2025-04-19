@@ -1,4 +1,6 @@
-﻿namespace Solution.DesktopApp.Configurations;
+﻿using Solution.Core.Models.Settings;
+
+namespace Solution.DesktopApp.Configurations;
 
 public static class ConfigurationOfAppSettingsMapping
 {

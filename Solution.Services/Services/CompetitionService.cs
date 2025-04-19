@@ -10,8 +10,10 @@ public class CompetitionService(AppDbContext dbContext) : ICompetitionService
     public async Task<ErrorOr<CompetitionModel>> CreateAsync(CompetitionModel model)
     {
         bool exists = await dbContext.Competitions.AnyAsync(x => x.Name.ToLower() == model.Name.Value.ToLower().Trim() &&
-                                                         x.Jury == model.Jury.Value &&
-                                                         x.Teams == model.Teams);
+                                                         x.Jury == model.Jury &&
+                                                         x.Teams == model.Teams &&
+                                                         x.Date == model.Date.Value &&
+                                                         x.Location == model.Location.Value.ToEntity());
 
         if (exists)
         {

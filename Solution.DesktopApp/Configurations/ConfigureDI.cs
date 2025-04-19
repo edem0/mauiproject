@@ -1,4 +1,5 @@
-﻿using Solution.Services.Services;
+﻿using Solution.Core.Interfaces;
+using Solution.Services.Services;
 
 namespace Solution.DesktopApp.Configurations;
 

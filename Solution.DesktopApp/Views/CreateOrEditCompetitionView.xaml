@@ -33,7 +33,7 @@
 
             <VerticalStackLayout Style="{StaticResource FormLineContainer}">
                 <Label Text="Juries"/>
-                <Picker ItemsSource="{Binding Juries}"
+                <Picker ItemsSource="{Binding Jury}"
                         ItemDisplayBinding="{Binding Name}"
                         SelectedItem="{Binding Jury.Value}">
                     <Picker.Behaviors>

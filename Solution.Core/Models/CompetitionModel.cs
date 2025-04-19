@@ -12,7 +12,7 @@ public partial class CompetitionModel
 
     public ValidatableObject<List<JuryModel>> Jury { get; set; }
 
-    public  List<TeamModel> Teams { get; set; }
+    public  ValidatableObject<List<TeamModel>> Teams { get; set; }
 
     public ValidatableObject<LocationModel> Location { get; set; }
 
@@ -22,6 +22,7 @@ public partial class CompetitionModel
         this.Date = new ValidatableObject<DateTime>();
         this.Location = new ValidatableObject<LocationModel>();
         this.Jury = new ValidatableObject<List<JuryModel>>();
+        this.Teams = new ValidatableObject<List<TeamModel>>();
 
         AddValidators();
     }
@@ -33,7 +34,7 @@ public partial class CompetitionModel
         this.Date.Value = entity.Date;
         this.Jury.Value = entity.Jury.Select(x => new JuryModel(x)).ToList();
         this.Location.Value = new LocationModel(entity.Location);
-        this.Teams = entity.Teams.Select(x => new TeamModel(x)).ToList();
+        this.Teams.Value = entity.Teams.Select(x => new TeamModel(x)).ToList();
     }
 
     public CompetitionEntity ToEntity()
@@ -50,7 +51,7 @@ public partial class CompetitionModel
                 EmailAddress = x.EmailAddress.Value,
                 PhoneNumber = x.PhoneNumber.Value
             }).ToList(),
-            Teams = this.Teams.Select(x => new TeamEntity
+            Teams = this.Teams.Value.Select(x => new TeamEntity
             {
                 Id = x.Id,
                 Name = x.Name.Value,
@@ -78,7 +79,7 @@ public partial class CompetitionModel
             EmailAddress = x.EmailAddress.Value,
             PhoneNumber = x.PhoneNumber.Value
         }).ToList();
-        entity.Teams = this.Teams.Select(x => new TeamEntity
+        entity.Teams = this.Teams.Value.Select(x => new TeamEntity
         {
             Id = x.Id,
             Name = x.Name.Value,
@@ -106,6 +107,7 @@ public partial class CompetitionModel
         ]);
 
         this.Jury.Validations.Add(new NotMoreOrLessThanXRule<List<JuryModel>>(3, "jury"){});
+        this.Teams.Validations.Add(new NotMoreOrLessThanXRule<List<TeamModel>>(10, "teams"){});
     }
 
 }
