@@ -6,88 +6,172 @@ using Microsoft.Maui.Storage;
 using Microsoft.Maui.Controls;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Solution.Core.Interfaces;
 
-namespace Solution.DesktopApp.ViewModels
+namespace Solution.DesktopApp.ViewModels;
+
+[ObservableObject]
+public partial class AddJudgeViewModel(AppDbContext dbContext, IJudgeService judgeService, IGoogleDriveService googleDriveService) : JuryModel(), IQueryAttributable
 {
-    public partial class AddJudgeViewModel : ObservableObject
+    private delegate Task ButtonActionDelegate();
+    private ButtonActionDelegate asyncButtonAction;
+
+    [ObservableProperty]
+    private string title;
+
+    public IAsyncRelayCommand AppearingCommand => new AsyncRelayCommand(OnAppearingAsync);
+    public IAsyncRelayCommand DisappearingCommand => new AsyncRelayCommand(OnDisappearingAsync);
+    public IAsyncRelayCommand SubmitCommand => new AsyncRelayCommand(OnSubmitAsync);
+    public IAsyncRelayCommand ImageSelectCommand => new AsyncRelayCommand(OnImageSelectAsync);
+
+    public IRelayCommand NameIRelayCommand => new RelayCommand(() => this.Name.Validate());
+
+    public IRelayCommand PhoneNumberIRelayCommand => new RelayCommand(() => this.PhoneNumber.Validate());
+
+    public IRelayCommand EmailAddressIRelayCommand => new RelayCommand(() => this.EmailAddress.Validate());
+
+    
+    [ObservableProperty]
+    private ImageSource image;
+    
+    private FileResult selectedFile;
+
+    private async Task OnAppearingAsync() { }
+
+    private async Task OnDisappearingAsync() { }
+
+    private async Task OnSubmitAsync() => await asyncButtonAction();
+
+
+    public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        public IAsyncRelayCommand AppearingCommand => new AsyncRelayCommand(OnAppearingAsync);
-        public IAsyncRelayCommand DisappearingCommand => new AsyncRelayCommand(OnDisappearingAsync);
-        public IAsyncRelayCommand SubmitCommand => new AsyncRelayCommand(OnSubmitAsync);
-        public IAsyncRelayCommand ImageSelectCommand => new AsyncRelayCommand(OnImageSelectAsync);
-        public ICommand ValidationCommand => new RelayCommand(OnValidate);
+        bool hasValue = query.TryGetValue("Jury", out object result);
 
-        private delegate Task ButtonActionDelegate();
-        private ButtonActionDelegate asyncButtonAction;
-
-        [ObservableProperty]
-        private ImageSource image;
-
-        [ObservableProperty]
-        private bool isNameInvalid;
-
-        [ObservableProperty]
-        private bool isImageInvalid;
-
-        private FileResult selectedFile;
-
-        public JuryModel Judge { get; }
-
-        public AddJudgeViewModel()
+        if (!hasValue)
         {
-            Judge = new JuryModel();
-            asyncButtonAction = DefaultSubmitActionAsync;
+            asyncButtonAction = OnSaveAsync;
+            Title = "Add new judge";
+            return;
         }
 
-        private Task OnAppearingAsync()
-        {
-            return Task.CompletedTask;
-        }
+        JuryModel judge = result as JuryModel;
 
-        private Task OnDisappearingAsync()
-        {
-            return Task.CompletedTask;
-        }
+        this.Id = judge.Id;
+        this.Name.Value = judge.Name.Value;
+        this.PhoneNumber.Value = judge.PhoneNumber.Value;
+        this.EmailAddress.Value = judge.EmailAddress.Value;
 
-        private async Task OnSubmitAsync()
+        if (!string.IsNullOrEmpty(judge.WebContentLink))
         {
-            OnValidate();
-
-            if (!isNameInvalid && !isImageInvalid)
+            Image = new UriImageSource
             {
-                await asyncButtonAction();
-            }
+                Uri = new Uri(judge.WebContentLink),
+                CacheValidity = new TimeSpan(10, 0, 0, 0)
+            };
         }
 
-        private Task DefaultSubmitActionAsync()
+        asyncButtonAction = OnUpdateAsync;
+        Title = "Update judge";
+    }
+
+
+    private async Task OnSaveAsync()
+    {
+        if (!IsFormValid())
         {
-            return Task.CompletedTask;
+            return;
         }
 
-        private async Task OnImageSelectAsync()
+        await UploadImageAsync();
+
+        var result = await judgeService.CreateAsync(this);
+
+        var message = result.IsError ? result.FirstError.Description : "Judge saved.";
+
+        var title = result.IsError ? "Error" : "Informtaion";
+
+        if (result.IsError)
         {
-#pragma warning disable CS8601
-            selectedFile = await FilePicker.PickAsync(new PickOptions
-            {
-                FileTypes = FilePickerFileType.Images,
-                PickerTitle = "Please select an image"
-            });
-#pragma warning restore CS8601
-
-            if (selectedFile != null)
-            {
-                var stream = await selectedFile.OpenReadAsync();
-                Image = ImageSource.FromStream(() => stream);
-            }
+            ClearForm();
         }
 
-        private void OnValidate()
+        await Application.Current.MainPage.DisplayAlert(title, message, "OK");
+    }
+
+    private async Task OnUpdateAsync()
+    {
+        if (!IsFormValid())
         {
-            var nameValue = Judge.Name?.Value?.Trim();
-            IsNameInvalid = string.IsNullOrWhiteSpace(nameValue) || nameValue.Length < 3;
-            IsImageInvalid = Image == null;
+            return;
         }
+
+        await UploadImageAsync();
+
+
+        var result = await judgeService.UpdateAsync(this);
+
+        var message = result.IsError ? result.FirstError.Description : "Judge saved.";
+        var title = result.IsError ? "Error" : "Informtaion";
+
+        await Application.Current.MainPage.DisplayAlert(title, message, "OK");
+    }
+
+    private async Task OnImageSelectAsync()
+    {
+        selectedFile = await FilePicker.PickAsync(new PickOptions
+        {
+            FileTypes = FilePickerFileType.Images,
+            PickerTitle = "please select the motorcycle image"
+        });
+
+        if (selectedFile is null)
+        {
+            return;
+        }
+
+        var stream = await selectedFile.OpenReadAsync();
+        Image = ImageSource.FromStream(() => stream);
+    }
+
+    private async Task UploadImageAsync()
+    {
+        if (selectedFile is null)
+        {
+            return;
+        }
+
+        var imageUploadResult = await googleDriveService.UploadFileAsync(selectedFile);
+
+        var message = imageUploadResult.IsError ? imageUploadResult.FirstError.Description : "Judge image uploaded";
+        var title = imageUploadResult.IsError ? "Error" : "Information";
+
+        await Application.Current.MainPage.DisplayAlert(title, message, "OK");
+
+        this.ImageId = imageUploadResult.IsError ? null : imageUploadResult.Value.Id;
+        this.WebContentLink = imageUploadResult.IsError ? null : imageUploadResult.Value.WebContentLink;
+
+    }
+
+    private void ClearForm()
+    {
+        this.Name.Value = null;
+        this.PhoneNumber.Value = null;
+        this.EmailAddress.Value = null;
+
+        this.Image = null;
+        this.selectedFile = null;
+        this.ImageId = null;
+        this.WebContentLink = null;
+    }
+
+    private bool IsFormValid()
+    {
+        this.Name.Validate();
+        this.PhoneNumber.Validate();
+        this.EmailAddress.Validate();
+
+        return this.Name.IsValid &&
+            this.PhoneNumber.IsValid &&
+            this.EmailAddress.IsValid;
     }
 }
-
-

@@ -10,6 +10,8 @@ public class AppDbContext() : DbContext
 
     public DbSet<LocationEntity> Locations { get; set; }
 
+	public DbSet <CityEntity> Cities { get; set; }
+
     public DbSet<MemberEntity> Members { get; set; }
 
     public DbSet<TeamEntity> Teams { get; set; }

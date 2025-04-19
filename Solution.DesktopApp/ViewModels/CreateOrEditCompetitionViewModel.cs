@@ -105,7 +105,7 @@ public partial class CreateOrEditCompetitionViewModel(AppDbContext dbContext, IC
 
     private async Task LoadJury()
     {
-        this.Jur = await dbContext.Jury.AsNoTracking()
+        Jur = await dbContext.Jury.AsNoTracking()
                                    .OrderBy(x => x.Name)
                                    .Select(x => new JuryModel(x))
                                    .ToListAsync();
@@ -113,7 +113,7 @@ public partial class CreateOrEditCompetitionViewModel(AppDbContext dbContext, IC
 
     private async Task LoadTeams()
     {
-        this.Team = await dbContext.Teams.AsNoTracking()
+        Team = await dbContext.Teams.AsNoTracking()
                                    .OrderBy(x => x.Name)
                                    .Select(x => new TeamModel(x))
                                    .ToListAsync();
@@ -121,8 +121,8 @@ public partial class CreateOrEditCompetitionViewModel(AppDbContext dbContext, IC
 
     private void ClearForm()
     {
-        this.Jury = null;
-        this.Teams = null;
+        this.Jury.Value = null;
+        this.Teams.Value = null;
         this.Name.Value = null;
         this.Date.Value = DateTime.Now;
         this.Location.Value = null;
