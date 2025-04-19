@@ -1,54 +1,56 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:viewModels="clr-namespace:Solution.DesktopApp.ViewModels"
-             xmlns:models="clr-namespace:Solution.Core.Models;assembly=Solution.Core"
-             xmlns:converters="clr-namespace:Solution.ValidationLibrary.Converters;assembly=Solution.ValidationLibrary"
-             xmlns:behaviors="clr-namespace:Solution.DesktopApp.Behaviors"
-             x:Class="Solution.DesktopApp.Views.AddTeamMemberView"
-             x:DataType="viewModels:AddTeamMemberViewModel">
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:Solution.DesktopApp.ViewModels"
+    xmlns:converters="clr-namespace:Solution.DesktopApp.Converters"
+    x:Class="Solution.DesktopApp.Views.AddTeamMemberPage"
+    x:DataType="viewmodels:AddTeamMemberViewModel"
+    Title="Add Team Member">
 
-    <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing"/>
-        <toolkit:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
-    </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" Invert="True" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+    <Grid ColumnDefinitions="*,*"
+          RowDefinitions="Auto,*"
+          Padding="20"
+          RowSpacing="20"
+          ColumnSpacing="30">
 
-            <StackLayout Orientation="Vertical"
-                         Style="{StaticResource FormLineContainer}"
-                         Margin="40">
-                <Border Stroke="{AppThemeBinding Light=Black, Dark=White}"
-                        StrokeThickness="2"
-                        Background="Transparent"
-                        Padding="0"
-                        HorizontalOptions="FillAndExpand"
-                        VerticalOptions="FillAndExpand">
-                    <Image Source="{Binding Image}" />
-                </Border>
-                <Button Text="Please select an image"
-                        Margin="0,5"
-                        Command="{Binding ImageSelectCommand}" />
-            </StackLayout>
+        <!-- Image selector + preview -->
+        <StackLayout Grid.Column="0" Spacing="10">
+            <Button Text="Select Image"
+                    Command="{Binding ImageSelectCommand}" />
 
-            <VerticalStackLayout Style="{StaticResource FormLineContainer}">
-                <Label Text="Member Name" Style="{StaticResource InputLabel}"/>
-                <Entry Text="{Binding Name.Value}">
-                    <Entry.Behaviors>
-                        <toolkit:EventToCommandBehavior EventName="TextChanged" Command="{Binding ValidationCommand}" />
-                    </Entry.Behaviors>
-                </Entry>
-                <Label Text="{Binding Name.Errors, Converter={StaticResource FirstValidationErrorConverter}}"
-                       Style="{StaticResource ValidationErrorLabelStyle}" />
-            </VerticalStackLayout>
+            <Image Source="{Binding Image}"
+                   HeightRequest="200"
+                   Aspect="AspectFit"
+                   BackgroundColor="LightGray" />
 
-            <VerticalStackLayout Style="{StaticResource FormLineContainer}">
-                <Button Text="Save" Command="{Binding SubmitCommand}" WidthRequest="250"/>
-            </VerticalStackLayout>
+            <Label Text="An image must be selected."
+                   IsVisible="{Binding IsImageInvalid}"
+                   TextColor="Red"
+                   FontSize="12"
+                   FontAttributes="Italic" />
+        </StackLayout>
 
-        </VerticalStackLayout>
-    </ScrollView>
+        <!-- Member name input -->
+        <StackLayout Grid.Column="1" Spacing="10">
+            <Label Text="Member Name" />
+            <Entry Text="{Binding Member.Name.Value, Mode=TwoWay}" />
+
+            <Label Text="Name must be at least 3 characters."
+                   IsVisible="{Binding IsNameInvalid}"
+                   TextColor="Red"
+                   FontSize="12"
+                   FontAttributes="Italic" />
+
+            <Button Text="Save"
+                    Command="{Binding SubmitCommand}"
+                    HorizontalOptions="Start"
+                    Margin="0,20,0,0" />
+        </StackLayout>
+    </Grid>
 </ContentPage>
-

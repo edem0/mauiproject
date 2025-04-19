@@ -1,24 +1,91 @@
-﻿
-namespace Solution.DesktopApp.ViewModels;
+﻿using System.Threading.Tasks;
+using Solution.Core.Models;
+using Solution.ValidationLibrary;
+using System.Windows.Input;
+using Microsoft.Maui.Storage;
+using Microsoft.Maui.Controls;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-public class AddTeamMemberViewModel
+namespace Solution.DesktopApp.ViewModels
 {
-    public IAsyncRelayCommand AppearingCommand => new AsyncRelayCommand(OnAppearingAsync);
-    public IAsyncRelayCommand DisappearingCommand => new AsyncRelayCommand(OnDisappearingAsync);
-    public IAsyncRelayCommand SubmitCommand => new AsyncRelayCommand(OnSubmitAsync);
-    public IAsyncRelayCommand ImageSelectCommand => new AsyncRelayCommand(OnImageSelectAsync);
-
-    private async Task OnAppearingAsync() { }
-
-    private async Task OnDisappearingAsync() { }
-
-    private async Task OnSubmitAsync()
+    public partial class AddTeamMemberViewModel : ObservableObject
     {
-        throw new NotImplementedException();
-    }
+        public IAsyncRelayCommand AppearingCommand => new AsyncRelayCommand(OnAppearingAsync);
+        public IAsyncRelayCommand DisappearingCommand => new AsyncRelayCommand(OnDisappearingAsync);
+        public IAsyncRelayCommand SubmitCommand => new AsyncRelayCommand(OnSubmitAsync);
+        public IAsyncRelayCommand ImageSelectCommand => new AsyncRelayCommand(OnImageSelectAsync);
+        public ICommand ValidationCommand => new RelayCommand(OnValidate);
 
-    private async Task OnImageSelectAsync()
-    {
-        throw new NotImplementedException();
+        private delegate Task ButtonActionDelegate();
+        private ButtonActionDelegate asyncButtonAction;
+
+        [ObservableProperty]
+        private ImageSource image;
+
+        [ObservableProperty]
+        private bool isNameInvalid;
+
+        [ObservableProperty]
+        private bool isImageInvalid;
+
+        private FileResult selectedFile;
+
+        public MemberModel Member { get; }
+
+        public AddTeamMemberViewModel()
+        {
+            Member = new MemberModel();
+            asyncButtonAction = DefaultSubmitActionAsync;
+        }
+
+        private Task OnAppearingAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task OnDisappearingAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task OnSubmitAsync()
+        {
+            OnValidate();
+
+            if (!IsNameInvalid && !IsImageInvalid)
+            {
+                await asyncButtonAction();
+            }
+        }
+
+        private Task DefaultSubmitActionAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        private async Task OnImageSelectAsync()
+        {
+#pragma warning disable CS8601
+            selectedFile = await FilePicker.PickAsync(new PickOptions
+            {
+                FileTypes = FilePickerFileType.Images,
+                PickerTitle = "Please select an image"
+            });
+#pragma warning restore CS8601
+
+            if (selectedFile != null)
+            {
+                var stream = await selectedFile.OpenReadAsync();
+                Image = ImageSource.FromStream(() => stream);
+            }
+        }
+
+        private void OnValidate()
+        {
+            var nameValue = Member.Name?.Value?.Trim();
+            IsNameInvalid = string.IsNullOrWhiteSpace(nameValue) || nameValue.Length < 3;
+            IsImageInvalid = Image == null;
+        }
     }
 }
