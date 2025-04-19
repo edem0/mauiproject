@@ -32,7 +32,7 @@ public static class MauiProgram
 
         builder.Services.AddTransient<CreateOrEditCompetitionViewModel>();
         builder.Services.AddTransient<CompetitionListViewModel>();
-        builder.Services.AddTransient<AddJuryViewModel>();
+        builder.Services.AddTransient<AddJudgeViewModel>();
         builder.Services.AddTransient<AddTeamViewModel>();
         builder.Services.AddTransient<AddTeamMemberViewModel>();
 

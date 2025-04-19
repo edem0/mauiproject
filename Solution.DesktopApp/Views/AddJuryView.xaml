@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:Solution.ValidationLibrary.Converters;assembly=Solution.ValidationLibrary"
              xmlns:behaviors="clr-namespace:Solution.DesktopApp.Behaviors"
              x:Class="Solution.DesktopApp.Views.AddJuryView"
-             x:DataType="viewModels:AddJuryViewModel">
+             x:DataType="viewModels:AddJudgeViewModel">
 
     <ContentPage.Behaviors>
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing"/>
